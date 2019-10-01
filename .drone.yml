@@ -9,4 +9,4 @@ platform:
 steps:
   - name: x86_64
     commands:
-      - test
+      - make x86_64
