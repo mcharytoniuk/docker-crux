@@ -11,10 +11,14 @@ the docker image from.
 
 By default it points to the latest CRUX release, so running `make x86_64` 
 should be enough. If you want to use your own ISO or mirror you can use
-`make x86_64 ISO_URL=https://example.com/crux.iso ISO_FILENAME=crux.iso`.
+
+```
+make x86_64 ISO_URL=https://example.com/crux.iso ISO_FILENAME=crux.iso CRUX_VERSION=3.5
+```
 
 Makefile uses separate variables for `ISO_URL` and `ISO_FILENAME` because the
-downloaded file might not actually match the `ISO_URL`.
+downloaded file might not actually match the `ISO_URL` and `CRUX_VERSION` 
+might not actually be contained in the filename.
 
 ## Continuous integration
 
