@@ -17,7 +17,7 @@ mkrootfsfromiso()
 {
     # Make sure the downloaded file exists
     if [ ! -e ${ISO_FILENAME} ]; then
-	   echo "${ISO_FILENAME} doesn't exist"
+       echo "${ISO_FILENAME} doesn't exist"
     fi
 
     # Mount the ISO
@@ -34,7 +34,7 @@ mkrootfsfromiso()
     touch ${ROOTFS}/var/lib/pkg/db
 
     for pkg in ${CRUX}/crux/core/*; do
-	   pkgadd -r ${ROOTFS} ${pkg}
+       pkgadd -r ${ROOTFS} ${pkg}
     done
 
     umount $CRUX
@@ -44,10 +44,10 @@ cleanuprootfs()
 {
     # Remove agetty and inittab config
     if (grep agetty ${ROOTFS}/etc/inittab 2>&1 > /dev/null); then
-    	echo "Removing agetty from /etc/inittab ..."
-    	chroot ${ROOTFS} sed -i -e "/agetty/d" /etc/inittab
-    	chroot ${ROOTFS} sed -i -e "/shutdown/d" /etc/inittab
-    	chroot ${ROOTFS} sed -i -e "/^$/N;/^\n$/d" /etc/inittab
+        echo "Removing agetty from /etc/inittab ..."
+        chroot ${ROOTFS} sed -i -e "/agetty/d" /etc/inittab
+        chroot ${ROOTFS} sed -i -e "/shutdown/d" /etc/inittab
+        chroot ${ROOTFS} sed -i -e "/^$/N;/^\n$/d" /etc/inittab
     fi
 
     # Remove kernel source
@@ -55,12 +55,12 @@ cleanuprootfs()
 
     # Remove unnecessary packages
     pkgs=(btrfs-progs dhcpcd e2fsprogs ed exim hdparm jfsutils \
-		      libusb-compat kbd lilo man-db man-pages  \
-		      mlocate openssh pciutils ppp psmisc rc   \
-		      reiserfsprogs sysfsutils sysvinit xfsprogs)
+              libusb-compat kbd lilo man-db man-pages  \
+              mlocate openssh pciutils ppp psmisc rc   \
+              reiserfsprogs sysfsutils sysvinit xfsprogs)
 
     for pkg in ${pkgs[@]}; do
-	   chroot ${ROOTFS} /usr/bin/pkgrm ${pkg} || true
+       chroot ${ROOTFS} /usr/bin/pkgrm ${pkg} || true
     done
 }
 
@@ -92,11 +92,11 @@ package()
     echo "Packaging Root FS ..."
 
     XZ_OPT=-9 \
-    tar --numeric-owner \
-	--exclude=/etc/mtab \
-	--exclude=/root/.bash_history \
-	-P -cJf rootfs.tar.xz \
-	-C ${ROOTFS} ./
+        tar --numeric-owner \
+        --exclude=/etc/mtab \
+        --exclude=/root/.bash_history \
+        -P -cJf rootfs.tar.xz \
+        -C ${ROOTFS} ./
 }
 
 main()
