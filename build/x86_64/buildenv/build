@@ -9,26 +9,19 @@ die () {
 
 download()
 {
-    echo "Downloading ${URL} ..."
-    curl -q ${URL} -o $(basename ${URL})
+    echo "Downloading ${ISO_URL} ..."
+    curl -q ${ISO_URL} -o $(basename ${ISO_URL})
 }
 
 mkrootfsfromiso()
 {
-    ISO=$(basename ${URL})
-
     # Make sure the downloaded file exists
-    if [ ! -e ${ISO} ]; then
-	echo "${ISO} doesn't exist"
-    fi
-
-    # Ensure the downloaded file is an ISO file
-    if ! ls | grep *.iso$ > /dev/null; then
-	echo "No ISO found"
+    if [ ! -e ${ISO_FILENAME} ]; then
+	   echo "${ISO_FILENAME} doesn't exist"
     fi
 
     # Mount the ISO
-    mount -o ro,loop ${ISO} ${CRUX}
+    mount -r -o loop ${ISO_FILENAME} ${CRUX}
 
     # Extract pkgutils
     tar -C ${TMP} -xf ${CRUX}/tools/pkgutils#*.pkg.tar.gz
@@ -41,7 +34,7 @@ mkrootfsfromiso()
     touch ${ROOTFS}/var/lib/pkg/db
 
     for pkg in ${CRUX}/crux/core/*; do
-	pkgadd -r ${ROOTFS} ${pkg}
+	   pkgadd -r ${ROOTFS} ${pkg}
     done
 
     umount $CRUX
@@ -51,10 +44,10 @@ cleanuprootfs()
 {
     # Remove agetty and inittab config
     if (grep agetty ${ROOTFS}/etc/inittab 2>&1 > /dev/null); then
-	echo "Removing agetty from /etc/inittab ..."
-	chroot ${ROOTFS} sed -i -e "/agetty/d" /etc/inittab
-	chroot ${ROOTFS} sed -i -e "/shutdown/d" /etc/inittab
-	chroot ${ROOTFS} sed -i -e "/^$/N;/^\n$/d" /etc/inittab
+    	echo "Removing agetty from /etc/inittab ..."
+    	chroot ${ROOTFS} sed -i -e "/agetty/d" /etc/inittab
+    	chroot ${ROOTFS} sed -i -e "/shutdown/d" /etc/inittab
+    	chroot ${ROOTFS} sed -i -e "/^$/N;/^\n$/d" /etc/inittab
     fi
 
     # Remove kernel source
@@ -67,7 +60,7 @@ cleanuprootfs()
 		      reiserfsprogs sysfsutils sysvinit xfsprogs)
 
     for pkg in ${pkgs[@]}; do
-	chroot ${ROOTFS} /usr/bin/pkgrm ${pkg} || true
+	   chroot ${ROOTFS} /usr/bin/pkgrm ${pkg} || true
     done
 }
 
